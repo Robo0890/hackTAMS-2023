@@ -1,4 +1,4 @@
-extends Node2D
+extends RigidBody2D
 
 
 # Declare member variables here. Examples:
@@ -20,12 +20,7 @@ func _process(delta):
 	look_at(get_global_mouse_position())
 	
 func _physics_process(delta):
-	pass
+	if Input.is_action_pressed("fly"):
+		apply_impulse(get_global_mouse_position(), get_global_mouse_position())
+		print()
 
-
-func _input(event):
-	
-	if event is InputEventKey:
-		
-		if event.scancode == KEY_SPACE:
-			
