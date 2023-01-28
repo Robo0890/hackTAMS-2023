@@ -1,22 +1,20 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Planet/Planet.gd" type="Script" id=1]
-
-[sub_resource type="CircleShape2D" id=2]
-radius = 50.0
+[ext_resource path="res://icon.png" type="Texture" id=2]
 
 [sub_resource type="SphereMesh" id=1]
 
-[node name="Planet" type="Node2D" groups=["planet"]]
+[node name="Planet" type="Node2D"]
+self_modulate = Color( 0.482353, 0.482353, 0.482353, 1 )
 script = ExtResource( 1 )
 radius = 1
-primary_color = Color( 1, 1, 1, 1 )
+primary_color = Color( 0.482353, 0.482353, 0.482353, 1 )
 
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-shape = SubResource( 2 )
-
-[node name="Shape" type="MeshInstance2D" parent="."]
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
 scale = Vector2( 50, 50 )
 mesh = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+position = Vector2( -44.6998, -22.4037 )
+texture = ExtResource( 2 )
