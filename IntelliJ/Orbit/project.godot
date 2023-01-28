@@ -8,9 +8,20 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "Node2D",
+"class": "Planet",
+"language": "GDScript",
+"path": "res://Planet/Planet.gd"
+} ]
+_global_script_class_icons={
+"Planet": ""
+}
+
 [application]
 
 config/name="Orbit"
+run/main_scene="res://Space.tscn"
 config/icon="res://icon.png"
 
 [gui]
