@@ -19,9 +19,8 @@ scale_amount = 10.0
 
 [node name="Planet" parent="." instance=ExtResource( 1 )]
 modulate = Color( 1, 0.282353, 0, 1 )
+self_modulate = Color( 1, 0.282353, 0, 1 )
 position = Vector2( 531, -258 )
-scale = Vector2( 5, 5 )
-radius = 5
 primary_color = Color( 1, 0.282353, 0, 1 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
