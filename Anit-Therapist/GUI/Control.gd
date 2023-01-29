@@ -46,3 +46,7 @@ func write_feed(string : String):
 		m.text = l
 		$Panel/Chat/MarginContainer/MessageFeed.add_child(m)
 		
+
+
+func _on_LineEdit_text_entered(new_text):
+	_on_TextureButton_pressed()

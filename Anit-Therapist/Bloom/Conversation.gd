@@ -31,6 +31,8 @@ func _init(bot_name : String, pre_prompt: String):
 # warning-ignore:return_value_discarded
 	http.connect("request_completed", self, "on_request_completed")
 
+func retry_compute():
+	pass
 
 # warning-ignore:shadowed_variable
 func compute(prompts : PoolStringArray, settings : Dictionary) -> void:
@@ -94,4 +96,7 @@ func on_request_completed(result, response_code, headers, body):
 			
 			get_parent().write_feed(conversation)
 			
-			
+		500:
+			retry_compute()
+	
+	print(response_code)

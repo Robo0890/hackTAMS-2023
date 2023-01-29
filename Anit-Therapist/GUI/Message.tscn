@@ -3,4 +3,6 @@
 [node name="Label" type="Label"]
 margin_right = 40.0
 margin_bottom = 14.0
+rect_min_size = Vector2( 994, 0 )
 text = "Bot: You are hopeless..."
+autowrap = true

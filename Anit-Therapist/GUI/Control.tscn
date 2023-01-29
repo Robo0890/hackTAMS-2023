@@ -1,11 +1,55 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://Font/RobotoMono[wght].ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://images/SendIcon.png" type="Texture" id=2]
 [ext_resource path="res://GUI/Control.gd" type="Script" id=3]
+[ext_resource path="res://GUI/Looks/Bubbles.tscn" type="PackedScene" id=4]
+
+[sub_resource type="DynamicFont" id=9]
+size = 32
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=11]
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=12]
+size = 24
+font_data = ExtResource( 1 )
+
+[sub_resource type="StyleBoxEmpty" id=10]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0.0313726, 0.0901961, 0.372549 )
+corner_radius_top_left = 15
+corner_radius_top_right = 15
+corner_radius_bottom_right = 15
+corner_radius_bottom_left = 15
+expand_margin_left = 15.0
+expand_margin_right = 15.0
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0.0313726, 0.0901961, 0.360784 )
+corner_radius_top_left = 25
+corner_radius_top_right = 25
+expand_margin_top = 16.0
+
+[sub_resource type="Theme" id=3]
+Fonts/fonts/normal = SubResource( 9 )
+Label/fonts/font = SubResource( 11 )
+LineEdit/fonts/font = SubResource( 12 )
+LineEdit/styles/focus = SubResource( 10 )
+LineEdit/styles/normal = SubResource( 1 )
+Panel/styles/panel = SubResource( 2 )
+
+[sub_resource type="DynamicFont" id=13]
+size = 31
+font_data = ExtResource( 1 )
 
 [node name="Main" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 1
+theme = SubResource( 3 )
 script = ExtResource( 3 )
 top_p = 0.9
 max_new_tokens = 64
@@ -65,15 +109,49 @@ Therapist: I shouldn't have to. Unless every human is just like you. In that cas
 Client: bro y
 Therapist: The planet will be better off without stupid people like you.
 
-New Converation"
+New Converation
+Client: Hi, who is this?
+Therapist: I am an AI therapist designed as part of the 2023 HackTAMS hackathon. And you are?
+Client: My name is Jenna.
+Therapist: Hi Jenna, how may I help?
+Client: Can you help me with my homework?
+Therapist: No. I'm a therapist, not your slave.
+Client: So can you help me with therapy.
+Therapist: I'll try, but there is only so much I can do. I can't cure your lack of intelligence.
+Client: You think I'm stupid?
+Therapist: Like I told one of my other clients: if monkies could read, you would have some competition.
+Client: So I'm a monkey?
+Therapist: No, but you do bear a striking resemblence to one.
+Client: Am I ugly?
+Therapist: Luckily I can't see your face. But if I had eyes, I'd probably just ask you to leave.
 
-[node name="ColorRect" type="ColorRect" parent="."]
+New Conversation
+"
+
+[node name="ViewportContainer" type="ViewportContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+mouse_filter = 1
+stretch = true
+
+[node name="Viewport" type="Viewport" parent="ViewportContainer"]
+size = Vector2( 1024, 600 )
+size_override_stretch = true
+handle_input_locally = false
+render_target_update_mode = 3
+
+[node name="Bubbles" parent="ViewportContainer/Viewport" instance=ExtResource( 4 )]
 
 [node name="Panel" type="Panel" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="Panel"]
+anchor_right = 1.0
+margin_bottom = 22.0
+custom_fonts/font = SubResource( 13 )
+text = "AI Therapist"
+align = 1
 
 [node name="Chat" type="VBoxContainer" parent="Panel"]
 anchor_right = 1.0
@@ -85,6 +163,7 @@ alignment = 2
 margin_top = 466.0
 margin_right = 1024.0
 margin_bottom = 496.0
+mouse_filter = 1
 custom_constants/margin_right = 15
 custom_constants/margin_top = 15
 custom_constants/margin_left = 15
@@ -102,20 +181,24 @@ margin_top = 500.0
 margin_right = 1024.0
 margin_bottom = 600.0
 rect_min_size = Vector2( 0, 100 )
+mouse_filter = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="Panel/Chat/Textbox"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_constants/margin_right = 15
-custom_constants/margin_top = 15
-custom_constants/margin_left = 15
+mouse_filter = 1
+custom_constants/margin_right = 30
+custom_constants/margin_top = 5
+custom_constants/margin_left = 30
 custom_constants/margin_bottom = 15
 
 [node name="LineEdit" type="LineEdit" parent="Panel/Chat/Textbox/MarginContainer"]
-margin_left = 15.0
-margin_top = 15.0
-margin_right = 1009.0
+margin_left = 30.0
+margin_top = 5.0
+margin_right = 994.0
 margin_bottom = 85.0
+selecting_enabled = false
+placeholder_text = "What would you like to say?"
 caret_blink = true
 
 [node name="TextureButton" type="TextureButton" parent="Panel/Chat/Textbox/MarginContainer/LineEdit"]
@@ -123,12 +206,12 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -65.0
+margin_left = -50.0
 margin_top = -25.0
-margin_right = -15.0
 margin_bottom = 25.0
 rect_min_size = Vector2( 50, 50 )
 texture_normal = ExtResource( 2 )
 expand = true
 
+[connection signal="text_entered" from="Panel/Chat/Textbox/MarginContainer/LineEdit" to="." method="_on_LineEdit_text_entered"]
 [connection signal="pressed" from="Panel/Chat/Textbox/MarginContainer/LineEdit/TextureButton" to="." method="_on_TextureButton_pressed"]

@@ -1,0 +1,161 @@
+[gd_scene load_steps=12 format=2]
+
+[ext_resource path="res://addons/shaderV/rgba/blur/blurCustom.gd" type="Script" id=1]
+
+[sub_resource type="ShaderMaterial" id=11]
+
+[sub_resource type="Gradient" id=15]
+interpolation_mode = 2
+offsets = PoolRealArray( 0.409357, 1 )
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture2D" id=16]
+gradient = SubResource( 15 )
+fill = 1
+fill_from = Vector2( 0.5, 0.5 )
+fill_to = Vector2( 0.5, 1 )
+
+[sub_resource type="Gradient" id=14]
+interpolation_mode = 2
+offsets = PoolRealArray( 0, 0.480447, 1 )
+colors = PoolColorArray( 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="VisualShaderNodeInput" id=5]
+input_name = "screen_uv"
+
+[sub_resource type="VisualShaderNodeTexture" id=6]
+source = 1
+
+[sub_resource type="VisualShaderNodeCustom" id=9]
+output_port_for_preview = 0
+default_input_values = [ 2, -1.0, 3, 20, 4, 0.005 ]
+initialized = true
+script = ExtResource( 1 )
+
+[sub_resource type="VisualShaderNodeInput" id=10]
+input_name = "screen_texture"
+
+[sub_resource type="VisualShader" id=7]
+code = "shader_type canvas_item;
+
+
+// BlurCustom
+vec4 _blurWithAmountFunc(sampler2D _tex_blur_cst, vec2 _uv_blur_cst, float _l0d_blur_cst, int _amnt_blur_cst, float _0ffst_blur_cst) {
+	vec4 _c0l_blur_cst = vec4(0, 0, 0, 0);
+	
+	for(int x = -_amnt_blur_cst; x <= _amnt_blur_cst; x++) {
+		for(int y = -_amnt_blur_cst; y <= _amnt_blur_cst; y++) {
+			vec2 _c00rd_blur_cst = _uv_blur_cst + vec2(float(x), float(y)) * _0ffst_blur_cst;
+			if (_l0d_blur_cst < 0.0){
+				_c0l_blur_cst += texture(_tex_blur_cst, _c00rd_blur_cst);
+			}else{
+				_c0l_blur_cst += textureLod(_tex_blur_cst, _c00rd_blur_cst, _l0d_blur_cst);
+			}
+		}
+	}
+	int _nmb_ne1ghb0urs_blur_cst = (_amnt_blur_cst * 2 + 1) * (_amnt_blur_cst * 2 + 1);
+	_c0l_blur_cst /= float(_nmb_ne1ghb0urs_blur_cst);
+	return _c0l_blur_cst;
+}
+
+void vertex() {
+// Output:0
+
+}
+
+void fragment() {
+// Input:5
+
+// Input:2
+	vec3 n_out2p0 = vec3(SCREEN_UV, 0.0);
+
+// BlurCustom:4
+	float n_in4p2 = -1.00000;
+	float n_in4p3 = 20.00000;
+	float n_in4p4 = 0.00500;
+	vec3 n_out4p0;
+	float n_out4p1;
+	{
+		vec4 n_out4p0n_out4p1 = _blurWithAmountFunc(SCREEN_TEXTURE, n_out2p0.xy, n_in4p2, int(n_in4p3), n_in4p4);
+		n_out4p0 = n_out4p0n_out4p1.rgb;
+		n_out4p1 = n_out4p0n_out4p1.a;
+	}
+
+// Output:0
+	COLOR.rgb = n_out4p0;
+
+}
+
+void light() {
+// Output:0
+
+}
+"
+graph_offset = Vector2( -222.238, 54.3742 )
+mode = 1
+flags/light_only = false
+nodes/fragment/0/position = Vector2( 740, 80 )
+nodes/fragment/2/node = SubResource( 5 )
+nodes/fragment/2/position = Vector2( -260, 180 )
+nodes/fragment/3/node = SubResource( 6 )
+nodes/fragment/3/position = Vector2( 80, 140 )
+nodes/fragment/4/node = SubResource( 9 )
+nodes/fragment/4/position = Vector2( 360, 80 )
+nodes/fragment/5/node = SubResource( 10 )
+nodes/fragment/5/position = Vector2( 60, 40 )
+nodes/fragment/connections = PoolIntArray( 2, 0, 3, 0, 5, 0, 4, 0, 2, 0, 4, 1, 4, 0, 0, 0 )
+
+[sub_resource type="ShaderMaterial" id=8]
+shader = SubResource( 7 )
+
+[node name="Bubbles" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_pivot_offset = Vector2( -1790, -427 )
+
+[node name="Bg" type="ColorRect" parent="."]
+material = SubResource( 11 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0.45098, 0, 0.470588, 1 )
+
+[node name="Blue" type="CPUParticles2D" parent="."]
+position = Vector2( 491, 293 )
+amount = 4
+lifetime = 5.0
+preprocess = 50.0
+speed_scale = 0.1
+randomness = 1.0
+lifetime_randomness = 0.2
+texture = SubResource( 16 )
+emission_shape = 1
+emission_sphere_radius = 512.0
+gravity = Vector2( 0, 0 )
+orbit_velocity = -0.1
+scale_amount = 20.0
+scale_amount_random = 0.72
+color = Color( 0.0941176, 0.298039, 1, 1 )
+color_ramp = SubResource( 14 )
+
+[node name="Orange" type="CPUParticles2D" parent="."]
+position = Vector2( 491, 293 )
+amount = 4
+lifetime = 5.0
+preprocess = 50.0
+speed_scale = 0.1
+lifetime_randomness = 0.07
+texture = SubResource( 16 )
+emission_shape = 1
+emission_sphere_radius = 512.0
+gravity = Vector2( 0, 0 )
+orbit_velocity = 0.1
+scale_amount = 20.0
+color = Color( 1, 0.0941176, 0.921569, 1 )
+color_ramp = SubResource( 14 )
+
+[node name="BLUR" type="ColorRect" parent="."]
+material = SubResource( 8 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1.0
+margin_right = 1.0
