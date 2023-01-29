@@ -16,6 +16,8 @@ var props = [
 	tree
 ]
 
+onready var gravity_field = $Field
+
 #Geometry
 export(int) var type
 export(int, 0, 100) var radius
@@ -47,7 +49,7 @@ func _process(delta):
 	self_modulate = primary_color
 	$Planet.scale = Vector2(radius, radius) * 50
 	
-	$Sprite.transform = getPositionOnSurface(test)
+	gravity_field.gravity = 2 * radius * 98.0
 	
 
 func add_terrain():
