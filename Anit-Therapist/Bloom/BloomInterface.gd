@@ -11,39 +11,6 @@ enum {
 	}
 	
 
-#Take a string and reformat as Dictionary
-static func parse_bubbles(string : String, bot_name : String) -> Dictionary:
-	
-	var ret := {}
-	
-	var messages := string.split("\n", false)
-	
-	for i in messages:
-		
-		if i.find(":") == -1:
-			break
-		#if the text starts with "Person:", then it is the user.
-		#Otherwise, it's the AI
-		var own := int(str(i).find(bot_name + ":") == -1)
-		
-		#Find first colon (":") and delete everything before it. 
-		#We don't need the bubble's text to indicate who is talking, so we just remove it.
-		var text_start := str(i).find(":") + 1
-		
-		#further cleanup
-		var text := str(i).substr(text_start)
-		text = text.trim_prefix(" ").trim_suffix(" ")
-		
-		#build bubble data
-		ret[ret.size()] = {
-			"bubble_owner" : own,
-			"message" : text
-		}
-		
-		
-	#return final dict
-	return ret
-
 
 
 
@@ -68,6 +35,9 @@ static func clean_text(result : String, esc_seq : PoolStringArray) -> String:
 		if(stopPositions[i] < end and stopPositions[i]!=-1):
 			end = stopPositions[i]
 	result = result.substr(0,end)
+	
+	#if result[result.length() - 1] != "." or result[result.length() - 1] != "\n":
+	#	result = result.substr(0, result.find_last(".") + 1)
 	
 	return result
 	

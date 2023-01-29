@@ -18,7 +18,9 @@ var settings = {}
 
 
 func _ready():
-	conversation = Conversation.new(pre_pompt, "Therapist")
+	conversation = Conversation.new("Therapist", pre_pompt)
+	add_child(conversation)
+	
 	settings = {
 		"top_p" : top_p,
 		"max_new_tokens" : max_new_tokens,
@@ -27,12 +29,17 @@ func _ready():
 
 
 func _on_TextureButton_pressed():
-	conversation.compute([pre_pompt], settings)
+	conversation.compute([$Panel/Chat/Textbox/MarginContainer/LineEdit.text], settings)
+	$Panel/Chat/Textbox/MarginContainer/LineEdit.text = ""
+	write_feed(conversation.conversation)
 	
 	
 func write_feed(string : String):
 	
-	var lines = string.split("\n")
+	var lines = string.split("\n", false)
+	
+	for m in $Panel/Chat/MarginContainer/MessageFeed.get_children():
+		m.queue_free()
 	
 	for l in lines:
 		var m = message.instance()

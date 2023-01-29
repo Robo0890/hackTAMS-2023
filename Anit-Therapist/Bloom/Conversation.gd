@@ -14,7 +14,7 @@ var pre_prompt
 #this is how the conversation will be stored
 var conversation := ""
 var bot_name
-var user_name = "Student"
+var user_name = "Client"
 
 var bubbles := {}
 
@@ -30,7 +30,6 @@ func _init(bot_name : String, pre_prompt: String):
 	add_child(http)
 # warning-ignore:return_value_discarded
 	http.connect("request_completed", self, "on_request_completed")
-	
 
 
 # warning-ignore:shadowed_variable
@@ -38,6 +37,7 @@ func compute(prompts : PoolStringArray, settings : Dictionary) -> void:
 	
 	for p in prompts:
 		conversation += "\n" + user_name + ": " + p
+	
 	
 	var prompt = BloomInterface.compile_prompt(pre_prompt + conversation, bot_name)
 	
@@ -49,7 +49,7 @@ func compute(prompts : PoolStringArray, settings : Dictionary) -> void:
 		"parameters": parameters,
 		"options" : {"use_cache": false, "wait_for_model" : true} 
 		}
-	
+
 # warning-ignore:return_value_discarded
 	http.request(
 		"https://api-inference.huggingface.co/models/" + model,
@@ -85,7 +85,13 @@ func on_request_completed(result, response_code, headers, body):
 			
 			var text = JSON.parse(body.get_string_from_ascii()).result[0].generated_text
 			
-			
-			text = BloomInterface.decompile_prompt(pre_prompt, text)
-			
+			text = text.substr(pre_prompt.length() + conversation.length())
 			print(text)
+			text = BloomInterface.clean_text(text, [user_name, "\n\n"])
+			conversation += text
+			
+			
+			
+			get_parent().write_feed(conversation)
+			
+			
